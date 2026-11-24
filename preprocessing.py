@@ -7,29 +7,21 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 
 
-# Load engineered dataset
+# Load dataset
 df = pd.read_csv('data/fraud_data_engineered.csv')
 
 print("Dataset loaded successfully!")
 print("Shape:", df.shape)
 
-# Remove target and device-related columns
-X = df.drop(
-    columns=['class', 'device_count', 'shared_device']
-)
 
-# Target column
+# Remove target and device-related features
+X = df.drop(columns=['class', 'device_count', 'shared_device'])
 y = df['class']
 
-# Categorical columns
-categorical_cols = [
-    'source',
-    'browser',
-    'sex',
-    'country'
-]
 
-# Numerical columns
+# Define categorical and numerical columns
+categorical_cols = ['source', 'browser', 'sex', 'country']
+
 numerical_cols = [
     'purchase_value',
     'age',
@@ -37,7 +29,8 @@ numerical_cols = [
     'purchase_hour'
 ]
 
-# Train-test split
+
+# Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
@@ -47,6 +40,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 print("Training data:", X_train.shape)
 print("Testing data:", X_test.shape)
+
 
 # Preprocessing
 preprocessor = ColumnTransformer(
@@ -63,6 +57,8 @@ print("Preprocessing completed!")
 print("Training shape:", X_train.shape)
 print("Testing shape:", X_test.shape)
 
+
+# Save processed data and preprocessor
 os.makedirs('models', exist_ok=True)
 
 joblib.dump(preprocessor, 'models/preprocessor.pkl')
